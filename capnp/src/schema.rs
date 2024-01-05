@@ -61,18 +61,20 @@ impl StructSchema {
         let mut lower: usize = 0;
         let mut upper: usize = self.raw.generic.members_by_name.len();
         let mut mid: usize = (lower + upper) / 2;
-        let (mut candidate_name, mut candidate_index) = self.raw.generic.members_by_name[mid];
+        let (_, mut candidate_index) = self.raw.generic.members_by_name[mid];
+        let mut candidate_name = self.get_fields()?.get(candidate_index).get_proto().get_name()?;
 
         while lower < upper {
             if name == candidate_name {
                 return Ok(Some(self.get_fields()?.get(candidate_index)));
-            } else if candidate_name < name {
+            } else if candidate_name.to_str()? < name {
                 lower = mid + 1;
             } else {
                 upper = mid;
             }
             mid = (lower + upper) / 2;
-            (candidate_name, candidate_index) = self.raw.generic.members_by_name[mid];
+            (_, candidate_index) = self.raw.generic.members_by_name[mid];
+            candidate_name = self.get_fields()?.get(candidate_index).get_proto().get_name()?;
         }
         Ok(None)
     }
