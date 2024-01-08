@@ -67,7 +67,7 @@ impl StructSchema {
         while lower < upper {
             if name == candidate_name {
                 return Ok(Some(fields.get(candidate_index)));
-            } else if candidate_name.to_str()? < name {
+            } else if candidate_name < name {
                 lower = mid + 1;
             } else {
                 upper = mid;
@@ -138,6 +138,7 @@ pub struct Field {
 }
 
 impl Field {
+    #[inline]
     pub fn get_proto(self) -> field::Reader<'static> {
         self.proto
     }
